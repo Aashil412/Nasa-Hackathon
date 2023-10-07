@@ -23,7 +23,7 @@ app.get("/users/:id", (req, res) => {
 
 // Create a new user
 app.post("/users", (req, res) => {
-  const {name,email,}
+  
 });
 
 // Update a specific job
