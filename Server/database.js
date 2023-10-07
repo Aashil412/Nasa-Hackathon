@@ -1,13 +1,7 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-module.exports = {
-    query: (text, params, callback) => {
-      console.log("QUERY:", text, params || "");
-      return pool.query(text, params, callback);
-    },
-  };
-
+// Define the pool with configuration from environment variables
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -16,8 +10,13 @@ const pool = new Pool({
   port: process.env.DB_PORT
 });
 
-// ...
+// Define the query function using the pool
+const query = (text, params) => {
+  console.log("QUERY:", text, params || "");
+  return pool.query(text, params);
+};
 
+// Define the createTableQuery and related functionality
 const createTableQuery = `
     DROP TABLE IF EXISTS users;
     CREATE TABLE IF NOT EXISTS users (
@@ -34,8 +33,6 @@ const createTableQuery = `
     );
 `;
 
-
-
 const createTable = async () => {
   try {
     await pool.query(createTableQuery);
@@ -47,4 +44,8 @@ const createTable = async () => {
 
 createTable();
 
-module.exports = pool;
+// Export the query function and pool for use in other modules
+module.exports = {
+  query,
+  pool
+};
