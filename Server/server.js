@@ -1,27 +1,37 @@
-const express = require('express');
-const { Pool } = require('pg');
-
+const express = require("express");
 const app = express();
-const port = 3000;
-
-// PostgreSQL connection pool
-const pool = new Pool({
-    user: 'your_db_username',
-    host: 'localhost',
-    database: 'your_db_name',
-    password: 'your_db_password',
-    port: 5432,
-});
-
-app.get('/', (req, res) => {
-    pool.query('SELECT NOW()', (err, results) => {
-        if (err) {
-            throw err;
-        }
-        res.json(results.rows[0]);
-    });
+const port = 4000;
+const { query } = require('./database');
+app.get("/", (req, res) => {
+  res.send("Welcome to the Job Application Tracker API!");
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running at http://localhost:${port}`);
+});
+
+
+// List all users
+app.get("/users", (req, res) => {
+  // This will eventually return a list of all jobs
+});
+
+// Get a specific job
+app.get("/users/:id", (req, res) => {
+  // This will eventually return a specific job
+});
+
+// Create a new user
+app.post("/users", (req, res) => {
+  
+});
+
+// Update a specific job
+app.patch("/users/:id", (req, res) => {
+  // This will eventually update a specific job
+});
+
+// Delete a specific job
+app.delete("/users/:id", (req, res) => {
+  // This will eventually delete a specific job
 });
