@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
-const port = 4111;
+
+const port = 4000;
+
 const { query } = require('./database');
 const session = require('express-session');
 const bcrypt = require("bcryptjs");
@@ -273,7 +275,7 @@ app.delete("/users/:id",authenticateUser, async(req, res) => {
     const userId = parseInt(req.params.id, 10);
     const user = await query("SELECT * FROM users WHERE user_id = $1", [userId]);
   try {
-    if (user.rowCount.length) {
+    if (user.rowCount>0) {
       await query("DELETE FROM users WHERE user_id = $1", [userId]);
       return res.status(200).send({ message: "User deleted successfully." });
     } else {
