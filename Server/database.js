@@ -69,8 +69,22 @@ createProjectTable();
 
 const createSkillsQuery = `
   DROP TABLE IF EXISTS skills;
-  CREATE TABLE 
-`
+  CREATE TABLE IF NOT EXISTS skills(
+    skills_id SERIAL PRIMARY KEY,
+    skills_name VARCHAR(100)
+  );
+`;
+
+const createSkillsTable = async () => {
+  try {
+    await pool.query(createSkillsTable);
+    console.log('Skills Table created successfully');
+  }
+  catch (err) {
+    console.error('Error executing query', err.stack);
+  }
+}
+createSkillsTable();
 // Export the query function and pool for use in other modules
 module.exports = {
   query,
