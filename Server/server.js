@@ -15,7 +15,7 @@ const io = socketIO(server, {
   }
 });
 
-const port = 4000;
+const port = 4001;
 
 const { query } = require('./database');
 const session = require('express-session');
@@ -570,6 +570,7 @@ app.delete('/skills/:id', authenticateUser,async (req, res) => {
     res.status(500).send("Error deleting the skill.");
   }
 });
+
 
 
 
