@@ -18,7 +18,7 @@ const query = (text, params) => {
 
 // Define the createTableQuery and related functionality
 const createTableQuery = `
-    DROP TABLE IF EXISTS users;
+    
     CREATE TABLE IF NOT EXISTS users (
         user_id SERIAL PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
@@ -46,7 +46,7 @@ createTable();
 
 
 const createProjectQuery = `
-  DROP TABLE IF EXISTS projects;
+  
   CREATE TABLE IF NOT EXISTS projects(
     project_id SERIAL PRIMARY KEY,
     creator_id INTEGER, FOREIGN KEY (creator_id) REFERENCES users (user_id),
