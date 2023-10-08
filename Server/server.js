@@ -171,7 +171,7 @@ app.delete("/projects/:id", async (req, res) => {
 })
 
 //SKILLS
-router.get('/skills', async (req, res) => {
+app.get('/skills', async (req, res) => {
   try {
     const skills = await query("SELECT * FROM projects");
     return res.status(200).json(skills);
@@ -180,7 +180,7 @@ router.get('/skills', async (req, res) => {
   }
 });
 
-router.get('/skills/:id', async (req, res) => {
+app.get('/skills/:id', async (req, res) => {
   const skills_id = req.params.skills_id;
 
   try {
@@ -197,61 +197,30 @@ router.get('/skills/:id', async (req, res) => {
 app.post('/skills', async (req, res) => {
   const { skills_id, skill_name } = req.body;
   try {
-    const skills = await await query(
-      "INSERT INTO projects (project_id, creator_id,project_name,description,project_url,created_at,status) VALUES ($1, $2, $3, $4, $5,$6,$7) RETURNING *",
-      [project_id, creator_id,project_name,description,project_url,created_at,status]
+    const skills = await query(
+      "INSERT INTO skills (skills_id, skill_name) VALUES ($1, $2) RETURNING *",
+      [skills_id, skill_name]
     )
-
-    res.status(201).json(skills);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(201).json(skills.rows[0]);
+  } catch (err) {
+    console.log("Error at projects post req", err);
+    res.status(500).json({ error: err.message || "Internal Error" })
   }
-
-
 });
 
-app.patch('/skills/:id', async (req, res) => {
-  const { id } = req.params;
-  const { name, description } = req.body;
 
+
+app.delete('/skills/:id', async (req, res) => {
+  const skills_id = parseInt(req.params.skills_id, 10);
+  const skills = await query("SELECT * FROM projects WHERE skills_id = $1", [skills_id]);
   try {
-    const programmingLanguage = await ProgrammingLanguage.findByPk(id);
-
-    if (!programmingLanguage) {
-      res.status(404).json({ error: 'Programming language not found' });
+    if (skills.rows.length) {
+      await query("DELETE FROM projects WHERE skills_id = $1", [skills_id])
+      return res.status(200).send({ message: "User deleted successfully." });
+    } else {
+      res.status(404).send({ message: "User not found" });
     }
-
-    if (name) {
-      programmingLanguage.name = name;
+  } catch (err) {
+    console.log(err);
     }
-
-    if (description) {
-      programmingLanguage.description = description;
-    }
-
-    await programmingLanguage.save();
-
-    res.status(200).json(programmingLanguage);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 });
-
-router.delete('/skills/:id', async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const programmingLanguage = await ProgrammingLanguage.findByPk(id);
-
-    if (!programmingLanguage) {
-      res.status(404).json({ error: 'Programming language not found' });
-    }
-
-    await programmingLanguage.destroy();
-
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
