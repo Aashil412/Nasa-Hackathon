@@ -26,7 +26,10 @@ app.get("/users",async (req, res) => {
 // Get a specific user
 app.get("/users/:id", async(req, res) => {
   const userId= parseInt(req.params.id,10) 
-    try{  
+
+    try{
+      
+
       const specificUser= await query("SELECT * FROM users WHERE user_id = $1 ",[userId])
       if(specificUser.rows.length>0){
       return res.status(200).json(specificUser.rows[0])
@@ -51,21 +54,40 @@ app.post("/users", async (req, res) => {
         console.error(err);
         res.status(500).json({ error: err.message || "Internal server error" });
     }
+
 });
 
 // Update a specific user
-app.patch("/users/:id", async (req, res) => {
-
-  const userId = parseInt(req.params.id, 10);
-  const user = await query("SELECT * FROM users WHERE user_id = $1", [userId]);
-  user.name = req.body.name;
-  user.email = req.body.email;
-  user.profile_picture = req.body.profile_picture;
-  user.bio = req.body.bio;
-  user.username = req.body.username;
-  await user.save();
-  res.send("Updated Successfully");
+app.patch("/users/:id",async (req, res) => {
+  const userId=parseInt(req.params.id,10)
+  const fieldNames=[
+    "name",
+    "email",
+    "bio",
+    "username",
+    "hashed_password"
+  ].filter((name)=>req.body[name])
+  let updatedValues = fieldNames.map(name => req.body[name]);
+  const setValuesSQL = fieldNames.map((name, i) => {
+    return `${name} = $${i + 1}`
+  }).join(', ');
+  //const { name, email, bio, username, hashed_password } = req.body;
+  try{
+    const updatedUser = await query(
+      `UPDATE users SET ${setValuesSQL} WHERE user_id = $${fieldNames.length+1} RETURNING *`,
+      [...updatedValues, userId]
+    );
+    if(updatedUser.rows.length>0){
+      res.status(200).json(updatedUser.rows[0])
+    }else{
+      res.status(404).send({message:"Job not found"})
+    }
+  }catch(err){
+    console.log(err)
+  }
 });
+
+
 
 // Delete a specific user
 app.delete("/users/:id", async(req, res) => {
@@ -232,3 +254,4 @@ router.delete('/skills/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+

@@ -44,6 +44,7 @@ const createTable = async () => {
 
 createTable();
 
+
 const createProjectQuery = `
   DROP TABLE IF EXISTS projects;
   CREATE TABLE IF NOT EXISTS projects(
@@ -71,6 +72,7 @@ const createSkillsQuery = `
   DROP TABLE IF EXISTS skills;
   CREATE TABLE 
 `
+
 // Export the query function and pool for use in other modules
 module.exports = {
   query,
