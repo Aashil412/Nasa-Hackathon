@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom"
 import "./WelcomeStyles.css"
 import CategoryTab from "./CategoryTag";
 import axios from "axios";
-import Image from './pic.jpeg'
+import Image from './pic.jpeg';
+import {use } from "react-router-dom";
 // import { apiClient } from "../api/ApiClient";
 
 function WelcomeComponent() {
@@ -104,6 +105,7 @@ function WelcomeComponent() {
 
   return (
     <div>
+      <Link to ={"/createProject"}>Create  A Project</Link>
     {clicked && <div className="page-white" onClick={(e)=>{setClicked(false)}}></div>}
       <div>View Popular Projects By Language!</div>
     <div className="whole-page">
