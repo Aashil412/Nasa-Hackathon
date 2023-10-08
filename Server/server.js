@@ -55,9 +55,33 @@ app.post("/users", async (req, res) => {
 });
 
 // Update a specific user
-app.patch("/users/:id", (req, res) => {
-    // Placeholder response
-    res.send("Endpoint to update a specific user not yet implemented.");
+app.patch("/users/:id",async (req, res) => {
+  const userId=parseInt(req.params.id,10)
+  const fieldNames=[
+    "name",
+    "email",
+    "bio",
+    "username",
+    "hashed_password"
+  ].filter((name)=>req.body[name])
+  let updatedValues = fieldNames.map(name => req.body[name]);
+  const setValuesSQL = fieldNames.map((name, i) => {
+    return `${name} = $${i + 1}`
+  }).join(', ');
+  //const { name, email, bio, username, hashed_password } = req.body;
+  try{
+    const updatedUser = await query(
+      `UPDATE users SET ${setValuesSQL} WHERE user_id = $${fieldNames.length+1} RETURNING *`,
+      [...updatedValues, userId]
+    );
+    if(updatedUser.rows.length>0){
+      res.status(200).json(updatedUser.rows[0])
+    }else{
+      res.status(404).send({message:"Job not found"})
+    }
+  }catch(err){
+    console.log(err)
+  }
 });
 
 // Delete a specific user
