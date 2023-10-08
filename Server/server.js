@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-const port = 4000;
+const port = 4001;
 
 const { query } = require('./database');
 const session = require('express-session');
