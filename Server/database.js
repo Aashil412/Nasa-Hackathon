@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 require('dotenv').config();
+const bcrypt = require('bcryptjs')
 
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -111,12 +112,62 @@ const createUserSkillsTable = async () => {
   }
 };
 
+// messages table. The sender and recipient are both referenced
+// as foreign key.
+const createMessagesQuery = `
+  CREATE TABLE IF NOT EXISTS messages(
+    id SERIAL PRIMARY KEY,
+    sender_id INTEGER REFERENCES users(user_id),
+    recipient_id INTEGER REFERENCES users(user_id),
+    message VARCHAR(1000),
+    seen BOOLEAN DEFAULT false
+  );
+`;
+
+
+const createMessagesTable = async () => {
+  try {
+    await query(createMessagesQuery);
+    console.log('Messages Table created successfully');
+  } catch (err) {
+    console.error('Error executing query', err.stack);
+  }
+};
 // Invoke the table creation functions
 createTable();
 createProjectTable();
 createSkillsTable();
 createProjectSkillsTable();
 createUserSkillsTable();
+createMessagesTable();
+
+
+// Temporary Users.
+
+const hashedPassword = bcrypt.hashSync("defaultPassword", 10); // A default password for all seeded users
+
+const seedUsersQuery = `
+      INSERT INTO users (name, email, username, hashed_password) 
+      VALUES 
+        ('John Doe', 'john@example.com', 'john_doe', $1),
+        ('Jane Smith', 'jane@example.com', 'jane_smith', $1),
+        ('Alice Johnson', 'alice@example.com', 'alice_johnson', $1),
+        ('Bob Brown', 'bob@example.com', 'bob_brown', $1)
+      ON CONFLICT (email) DO NOTHING;
+`;
+
+const seedUsers = async () => {
+  try {
+    await query(seedUsersQuery, [hashedPassword]);
+    console.log('Default users seeded successfully');
+  } catch (err) {
+    console.error('Error executing query', err.stack);
+  }
+};
+
+seedUsers();
+
+
 
 module.exports = {
   query,

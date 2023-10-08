@@ -1,5 +1,19 @@
 const express = require("express");
 const app = express();
+const socketIO = require("socket.io")
+const http = require("http")
+const cors = require('cors');
+
+app.use(cors());
+
+const server = http.createServer(app);
+
+const io = socketIO(server, {
+  cors: {
+    origin: "http://localhost:5173", // or whichever frontend port you're using
+    methods: ["GET", "POST"]
+  }
+});
 
 const port = 4000;
 
@@ -21,10 +35,81 @@ app.get("/", (req, res) => {
     res.send("Welcome to the Job Application Tracker API!");
 });
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+// app.listen(port, () => {
+//     console.log(`Server is running at http://localhost:${port}`);
+// });
+
+server.listen(port, () => {
+    console.log(`Server is running with Socket.io at http://localhost:${port}`);
 });
+
+// Web Socket behavior
+
+// store active users in here, name mapped to socket id.
+// allowing users to send message to server with the user
+// name in the payload, then server will redirect it to
+// the correct user.
+
+let activeUsers = {}; 
+
+// on connection, save user to the activeUsers table.
+
+io.on('connection', (socket) => {
+    console.log("A client has connected");
+
+    // user will send username, and it will
+    // store user : socket id pair so users can
+    // chat.
+    socket.on('setUserID', (username) => {
+        activeUsers[username] = socket.id;
+    });
+
+    // handle message
+
+      socket.on('send message', async (data) => {
+
+        // if its user is in activeUsers then they are online,
+        // so send it through websocket.
+
+        const targetSocketID = activeUsers[data.to];
+        // if socket exists / user online, send message.
+        if (targetSocketID) {
+            io.to(targetSocketID).emit('receive message', data.message);
+        }
+
+       // save message to message history. 
+        try {
+          // query for the recipient. 
+          const recipientResult = await query('SELECT user_id FROM users WHERE username = $1', [data.to]);
+          // query for the sender.
+          const senderResult = await query('SELECT user_id FROM users WHERE username = $1', [data.from]);
+          if (recipientResult.rows.length == 1) {
+
+              const recipient = recipientResult.rows[0];
+              const sender = senderResult.rows[0];
+              // save the message using the users primary key.
+              const insertQuery = `INSERT INTO messages (sender_id, recipient_id, message) VALUES ($1, $2, $3)`
+              const insert = await query(insertQuery, [sender.user_id, recipient.user_id, data.message])
+
+          } else {
+              return false;
+          }
+        } catch (err) {
+            console.error('Error querying the database', err);
+            return false;
+        }
+    });
+
+    // When the client disconnects
+    socket.on('disconnect', () => {
+        console.log("A client has disconnected");
+    });
+});
+
+
 //AUTHENTICATION-------------
+
+
 app.post("/signup", async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
 

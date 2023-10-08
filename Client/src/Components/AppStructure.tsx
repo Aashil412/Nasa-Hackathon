@@ -4,6 +4,7 @@ import { ReactNode, useState } from 'react'
 import NavigationBar from './NavBar/NavBarComponent';
 import WelcomeComponent from './Welcome/Welcome';
 import Profile from './Profile/Profile';
+import ChatBox from './ChatBox/ChatBox';
 
 interface elementProp {
 }
@@ -19,6 +20,7 @@ const AppStructure = () => {
                 <Routes>
                         <Route path='' element={<WelcomeComponent/>}/>
                         <Route path='/profile' element={<Profile/>}/>
+                        <Route path='/chat' element={<ChatBox/>}/>
                         {/* <Route path='/signup' element={<SignupComponent changeComp={changeComponent} closeForm={closeComp}/>}/> */}
                 </Routes>
                 {/* <FooterComponent/> */}
