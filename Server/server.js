@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
+
 const port = 4000;
+
 const { query } = require('./database');
 const session = require('express-session');
 const bcrypt = require("bcryptjs");
