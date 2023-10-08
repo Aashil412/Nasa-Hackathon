@@ -44,6 +44,33 @@ const createTable = async () => {
 
 createTable();
 
+const createProjectQuery = `
+  DROP TABLE IF EXISTS projects;
+  CREATE TABLE IF NOT EXISTS projects(
+    project_id SERIAL PRIMARY KEY,
+    creator_id INTEGER, FOREIGN KEY (creator_id) REFERENCES users (user_id),
+    project_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    project_url VARCHAR(100),
+    created_at TIMESTAMP DEFAULT NOW(),
+    status VARCHAR(100)
+  );
+`;
+const createProjectTable = async () => {
+  try {
+    await pool.query(createProjectQuery);
+    console.log('Project Table created successfully');
+  }
+  catch (err) {
+    console.error('Error executing query', err.stack);
+  }
+}
+createProjectTable();
+
+const createSkillsQuery = `
+  DROP TABLE IF EXISTS skills;
+  CREATE TABLE 
+`
 // Export the query function and pool for use in other modules
 module.exports = {
   query,
