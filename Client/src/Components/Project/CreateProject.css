@@ -1,0 +1,53 @@
+.create-project-container {
+    width: 60%;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+.create-project-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.create-project-form-group {
+    margin-bottom: 20px;
+}
+
+.create-project-label {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.create-project-input,
+.create-project-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.create-project-textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.create-project-button {
+    background-color: #9F7AEA;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.create-project-button:hover {
+    background-color: #8159d6;
+}

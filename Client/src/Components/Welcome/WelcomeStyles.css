@@ -194,6 +194,59 @@
 .scroll-right:hover {
   opacity: 0.65;
 }
+.CreateAProject {
+  display: inline-block;
+  padding: 10px 25px;
+  color: #fff;
+  background: linear-gradient(135deg, #8A9FD6, #6CA8E8);  
+  border: none;
+  border-radius: 25px;
+  font-size: 20px;
+  font-weight: 550;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+  padding: 15px 30px; 
+  border-radius: 15px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);  
+  text-align: center;
+  margin-top: 15px;
+  letter-spacing: 0.8px; 
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);  
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.CreateAProject:hover {
+  background: linear-gradient(145deg, #6F86D6, #499CE5);  
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);  
+}
+
+.CreateAProject:active {
+  background: linear-gradient(155deg, #6F86D6, #408CD5); 
+  transform: translateY(1px); 
+}
+
+.ViewProjects {
+  font-size: 20px;
+  color: #ffffff;  
+  background: linear-gradient(135deg, #8A9FD6, #6CA8E8); 
+  padding: 15px 30px; 
+  border-radius: 15px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);  
+  text-align: center;
+  margin: 15px 0;
+  font-weight: 550;
+  letter-spacing: 0.8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ViewProjects:hover {
+  transform: translateY(-2px); 
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);  
+  background: linear-gradient(155deg, #6F86D6, #408CD5); 
+}
 
 .search-bar {
   position: absolute;
