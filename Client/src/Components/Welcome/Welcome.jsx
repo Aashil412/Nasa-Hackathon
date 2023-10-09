@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef  } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 // import LoginComponent from "../loginComponent/LoginComponent";
 import "./WelcomeStyles.css"
 import CategoryTab from "./CategoryTag";
 import axios from "axios";
-import Image from './pic.jpeg';
-import {use } from "react-router-dom";
 // import { apiClient } from "../api/ApiClient";
 
 function WelcomeComponent() {

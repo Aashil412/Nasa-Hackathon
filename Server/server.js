@@ -3,8 +3,27 @@ const app = express();
 const socketIO = require("socket.io")
 const http = require("http")
 const cors = require('cors');
+const { query } = require('./database');
+const session = require('express-session');
+const bcrypt = require("bcryptjs");
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',  // your frontend's origin
+  credentials: true,
+}));
+
+const port = 4001;
+
+
+app.use(express.json()); // Adding body parsing middleware
+app.use(session({
+  secret: 'secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 3600000, httpOnly: true }
+}));
+
+
 
 const server = http.createServer(app);
 
@@ -15,21 +34,6 @@ const io = socketIO(server, {
   }
 });
 
-const port = 4001;
-
-const { query } = require('./database');
-const session = require('express-session');
-const bcrypt = require("bcryptjs");
-
-app.use(express.json()); // Adding body parsing middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 3600000 // 1 hour
-  },
-}));
 
 app.get("/", (req, res) => {
     res.send("Welcome to the Job Application Tracker API!");
@@ -114,13 +118,13 @@ app.post("/signup", async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
   const insertUserQuery = `
-      INSERT INTO users (name, email, hashed_password) 
+      INSERT INTO users (username, email, hashed_password) 
       VALUES ($1, $2, $3) 
-      RETURNING user_id, name, email;
+      RETURNING user_id, username, email;
   `;
 
   try {
-      const result = await query(insertUserQuery, [req.body.name, req.body.email, hashedPassword]);
+      const result = await query(insertUserQuery, [req.body.username, req.body.email, hashedPassword]);
       
       const user = result.rows[0];
 
@@ -129,7 +133,7 @@ app.post("/signup", async (req, res) => {
           message: "User created!",
           user: {
               user_id: user.user_id,
-              name: user.name,
+              name: user.username,
               email: user.email,
           },
       });
@@ -152,7 +156,7 @@ app.post('/login', async (req, res) => {
   try {
     // First, find the user by their email address
     const userQuery = `
-        SELECT user_id, name, email, hashed_password 
+        SELECT user_id, username, email, hashed_password 
         FROM users 
         WHERE email = $1;
     `;
@@ -176,11 +180,12 @@ app.post('/login', async (req, res) => {
       if (isMatch) {
         // Passwords match
         req.session.userId = user.user_id;
-
+        console.log("SESSION", req.session)
+        console.log('good sign in')
         res.status(200).json({
           message: 'Logged in successfully',
           user: {
-            name: user.name,
+            name: user.username,
             email: user.email,
           },
         });
@@ -210,6 +215,8 @@ app.delete('/logout', (req, res) => {
 
 //AUTH FUNCTION
 const authenticateUser = (req, res, next) => {
+  console.log("In authenticateUser middleware");
+  console.log("Session content:", req.session);
   if (!req.session.userId) {
     return res.status(401).json({ message: 'You must be logged in to view this page.' });
   }
@@ -222,7 +229,7 @@ app.get("/users_with_skills", async (req, res) => {
         // Query to fetch all users along with their associated skills
         const usersWithSkillsQuery = `
             SELECT 
-                u.user_id, u.name, u.email, s.skills_name
+                u.user_id, u.username, u.email, s.skills_name
             FROM 
                 users u
             LEFT JOIN 
@@ -241,7 +248,7 @@ app.get("/users_with_skills", async (req, res) => {
             if (!users[row.user_id]) {
                 users[row.user_id] = {
                     user_id: row.user_id,
-                    name: row.name,
+                    username: row.username,
                     email: row.email,
                     skills: []
                 };
@@ -293,11 +300,11 @@ app.get("/users/:id", async(req, res) => {
 
 // Create a new user
 app.post("/users", authenticateUser,async (req, res) => {
-    const { name, email, bio, username, hashed_password } = req.body;
+    const { email, bio, username, hashed_password } = req.body;
     try {
         const newUser = await query(
-            "INSERT INTO users (name, email, bio, username, hashed_password) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-            [name, email, bio, username, hashed_password]
+            "INSERT INTO users (email, bio, username, hashed_password) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+            [email, bio, username, hashed_password]
         );
         res.status(201).json(newUser.rows[0]);
     } catch (err) {
@@ -317,7 +324,6 @@ app.patch("/users/:id", authenticateUser, async (req, res) => {
   }
 
   const fieldNames = [
-      "name",
       "email",  // Depending on your use-case, you might want to exclude email from direct updates.
       "bio",
       "username",  // Depending on your use-case, you might want to exclude username from direct updates.
@@ -404,7 +410,7 @@ app.get("/projects/:id", async (req, res) => {
 app.post("/projects", authenticateUser, async (req, res) => {
   const { project_name, description, project_url, created_at, status, skills } = req.body;
   const user_id = req.session.userId;  // Fetch user_id from session
-  
+  console.log("hit endpoint")
   try {
     const project = await query(
       "INSERT INTO projects (user_id, project_name, description, project_url, created_at, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING project_id",

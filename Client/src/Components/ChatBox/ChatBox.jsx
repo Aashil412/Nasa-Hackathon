@@ -7,7 +7,7 @@ const ChatBox = () => {
   const username = 'john_doe';
 
   useEffect(() => {
-    const socket = io('http://localhost:4000');
+    const socket = io('http://localhost:4001');
     // Automatic user connection for john_doe
     socket.emit('setUserID', 'john_doe');
 

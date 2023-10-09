@@ -15,14 +15,17 @@ const query = (text, params) => {
   return pool.query(text, params);
 };
 
+//  DROP TABLE IF EXISTS users CASCADE;
+//  i removed the name and made username
+//  unique. add that query above before create
+//  if you want to drop and change table.
 const createTableQuery = `
     CREATE TABLE IF NOT EXISTS users (
         user_id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
         email VARCHAR(100) NOT NULL UNIQUE,
         profile_picture BYTEA,
         bio TEXT,
-        username VARCHAR(100) UNIQUE,
+        username VARCHAR(100) NOT NULL UNIQUE,
         hashed_password VARCHAR(100) NOT NULL,
         created_at TIMESTAMP DEFAULT NOW(),
         update_at TIMESTAMP,
@@ -147,12 +150,12 @@ createMessagesTable();
 const hashedPassword = bcrypt.hashSync("defaultPassword", 10); // A default password for all seeded users
 
 const seedUsersQuery = `
-      INSERT INTO users (name, email, username, hashed_password) 
+      INSERT INTO users (email, username, hashed_password) 
       VALUES 
-        ('John Doe', 'john@example.com', 'john_doe', $1),
-        ('Jane Smith', 'jane@example.com', 'jane_smith', $1),
-        ('Alice Johnson', 'alice@example.com', 'alice_johnson', $1),
-        ('Bob Brown', 'bob@example.com', 'bob_brown', $1)
+        ('john@example.com', 'john_doe', $1),
+        ('jane@example.com', 'jane_smith', $1),
+        ('alice@example.com', 'alice_johnson', $1),
+        ('bob@example.com', 'bob_brown', $1)
       ON CONFLICT (email) DO NOTHING;
 `;
 
