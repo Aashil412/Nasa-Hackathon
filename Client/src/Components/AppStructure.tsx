@@ -4,10 +4,10 @@ import { ReactNode, useState } from 'react'
 import NavigationBar from './NavBar/NavBarComponent';
 import WelcomeComponent from './Welcome/Welcome';
 import Profile from './Profile/Profile';
-
+import ProfilePage from './ProfilePage/ProfilePage';
 import ChatBox from './ChatBox/ChatBox';
 
-import CreateProject from './CreateProject';
+import CreateProject from '../Components/Project/CreateProject';
 import AuthProvider from '../context/auth/AuthContext';
 
 interface elementProp {
@@ -39,6 +39,7 @@ const AppStructure = () => {
 
                     <Route path='/profile' element={<Profile />} />
                     <Route path='/createProject' element={<CreateProject/> } />
+                    <Route path='/profilePage' element={<ProfilePage/> } />
 
                         {/* <Route path='/signup' element={<SignupComponent changeComp={changeComponent} closeForm={closeComp}/>}/> */}
                 </Routes>

@@ -103,9 +103,6 @@ function WelcomeComponent() {
 
   return (
     <div>
-      <Link to ={"/createProject"}>Create  A Project</Link>
-    {clicked && <div className="page-white" onClick={(e)=>{setClicked(false)}}></div>}
-      <div>View Popular Projects By Language!</div>
     <div className="whole-page">
     <div className="home-page" ref={containerRef}>
       {pageWidth < 2992 && right ? <div><div className="svg-background-right"></div><img className="scroll-right" onClick={scrollToRight} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADg0lEQVR4nO2ay08UQRDGfyiyazAiC7hwk6PBqP+ECgqK3FC8afAiEvTq46yeSEj4OzBIIFFDosYngk+eJ5WDEW8uEDRrOn6TdHAfM8POA8KXTHhUdXf1VHV19dcD29i6SAHtwF1gGJgGfgKreszvnyUzOmeAamKCJHABGAP+AFmPz29gFOgCElFMYDdwDVi0jFoBHgE35JmDeuO79FTrf0Z2E3isNk77b0CfXk4oOAUsWAa8Ai4CVT762gdcAl5b/c0DLQQI86YGrQHfAMdL2H8z8NbqfyAI79TLcDPAL+AKsLPUg/Cvz6tAxvJ2ulSdN8rdWWWdQwSPw8CMxpyTDRtCndXhS6CW8FANPNHYC4oKX0ha4fQMqCR8VALPrTDztWYGrXAym11UqLGiwiQAzynWWdhhrAk3ayYjm0x2c73ZOfuEyU5xQa+1+F2F2HVrnwgixfpFOTAp28ykCiKhUsEoHyN+OCnbFot5pcvKEEFhAnjnM52WWZn0XCHFMSmZ2ikoTGmMTz4n0632I/kUUiqrV3wWgG5Rr5TuTCbtY6NcBdby2XlWnT8keOwHPmg8cwBr8Nh+XG3bcgnvSWjOE2HA9sxHj565rXZ3cgmHJTxNeLA9Yybl1jNO9AzlEs5KaE5xYcL2zHtNrhiarLD8D0sSRlFXrfdMfRH9Wul+zyVclbCiSB53dtcgn0kXG7fDE/iayA5taLGeyFKEoZX2GFp1hUJryyz2YQkNAxiVJxpctusolH6dDdGQZ5t6Q2yX0LCFYXpiIyVKa75izCkaDQMY16IxZRWNe/MpjWoAQ2PGtYy/rPYPCimdl5LhYoPCC1Gjfg9WE7Kxs9hG81WKJ4gfWmXbFzfXEH1Snogh+TAl23rcNEhaXK8hlOOCPtk04+VSqEWNMiLHosZRYFk2eb7KGLDegKEto0KdSDljS7+fDpKihbIikqMgsfcoy2X1M7GRtzFtXSuYv8NCCniqsedLceHTaLnWhNkRwlkTcxrTVOUHStVx2gqzjLhXkw5LjXJlp2UrnNyU9Z7XzMC6U1ypbl/LdJUxZfXfH/Tde7Pldoe17/b5FUNKtZN9fJ4t8W1xUe/0WuVMVhWpKa9viXdqUtqu0FOjS6MO6YxbPIFTdvRE9QVEQqz4iI4AXkmGNZ1MO6OaQC5UiYs1p7b7OnP8sD6q+aHSfUg6bYXOE9tgk+Mvs7BwO2/6kC8AAAAASUVORK5CYII="/> </div>: ""}
@@ -125,16 +122,21 @@ function WelcomeComponent() {
     <div className="search-container">
       <div className="img-container">
         
-        <img className='home-search-img' src="https://www.getfoundquick.com/wp-content/uploads/2017/10/shutterstock_588813473.jpg"></img>
+            <img className='home-search-img' src="https://www.getfoundquick.com/wp-content/uploads/2017/10/shutterstock_588813473.jpg"></img>
+            
         <form>
           <input placeholder="Search For Projects" className="search-bar" style={{borderRadius: clicked ? '10px 10px 0px 0px' : '', top: clicked ? '30%' : ''}} onClick={()=>{setClicked(true)}}></input>
           
          {clicked &&
             <div className='search-results'></div>
          } 
-        </form>
+            </form>
+            
 
-      </div>
+          </div>
+          <Link to ={"/createProject"} className="CreateAProject">Create  A Project</Link>
+    {clicked && <div className="page-white" onClick={(e)=>{setClicked(false)}}></div>}
+      <div className="ViewProjects">View Popular Projects By Language!</div>
       </div>
       </div>
       </div>

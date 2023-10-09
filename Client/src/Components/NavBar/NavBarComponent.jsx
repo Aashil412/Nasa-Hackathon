@@ -69,10 +69,10 @@ const NavigationBar = (props) => {
           :
           <>
           <Nav.Link className='nav-link-style' onClick={()=>{props.closeorOpenForm(); setSignupComp(true) }}>
-            &#xa0;signup
+            &#xa0;Sign Up
           </Nav.Link>
           <Nav.Link className='nav-link-style' onClick={()=> {props.closeorOpenForm(); setSignupComp(false)}}>
-            &#xa0;login
+            &#xa0;Login
           </Nav.Link>
           </>
         }
