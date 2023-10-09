@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import { apiClient } from '../api/apiClient';
 
 const CreateProject = () => {
   const [projectData, setProjectData] = useState({
@@ -16,9 +17,10 @@ const CreateProject = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4001/projects', projectData);
+      
+      const response = await apiClient.post(`/projects`, projectData, { withCredentials: true });
       if (response.data && response.data.message) {
-        alert(response.data.message);
+        alert('a');
         // reset the form or navigate to another page
         setProjectData({
           project_name: '',
@@ -30,7 +32,7 @@ const CreateProject = () => {
         });
       }
     } catch (error) {
-      alert('Error creating project.');
+      alert(error);
     }
   };
 
